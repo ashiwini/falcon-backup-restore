@@ -1,0 +1,577 @@
+swagger: '2.0'
+info:
+  title: Falcon Backup Restore
+  description: >-
+    Backup and Restore for device states
+  version: 0.0.1
+host: 192.168.99.100
+schemes:
+  - https
+basePath: /
+produces:
+  - application/json
+paths:
+  /info:
+    get:
+      summary: Endpoint to check the status of the xms-vehicle-status service.
+      description: Endpoint to check the status of the xms-vehicle-status service.
+      tags:
+        - Info
+      responses:
+        '200':
+          description: 'Success, service is running'
+          schema:
+            $ref: '#/definitions/Info'
+        default:
+          description: 'Error, service not accessible'
+          schema:
+            $ref: '#/definitions/Error'
+  /user:
+    post:
+      parameters:
+        - name: body
+          in: body
+          description: The body of type User
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - Users
+      responses:
+        '201':
+          description: User created
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/user/{user_id}':
+    get:
+      parameters:
+        - name: user_id
+          in: path
+          description: Unique id of the user
+          required: true
+          type: integer
+      tags:
+        - Users
+      responses:
+        '200':
+          description: The requested user.
+          schema:
+            $ref: '#/definitions/User'
+        '404':
+          description: user not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/devices':
+     post:
+      parameters:
+        - name: body
+          in: body
+          description: The body of type devices
+          required: true
+          schema:
+            $ref: '#/definitions/Device'
+      tags:
+        - Devices
+      responses:
+        '201':
+          description: Device created
+          schema:
+            $ref: '#/definitions/Device'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/devices/{device_id}':
+    get:
+      parameters:
+        - name: device_id
+          in: path
+          description: Unique id of the device
+          required: true
+          type: integer
+      tags:
+        - Devices
+      responses:
+        '200':
+          description: The requested device.
+          schema:
+            $ref: '#/definitions/Device'
+        '404':
+          description: device not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  '/devices/user/{user_id}':
+    get:
+      parameters:
+        - name: user_id
+          in: path
+          description: Unique id of the user
+          required: true
+          type: integer
+      tags:
+        - Devices
+      responses:
+        '200':
+          description: The devices added by a given user.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Device'
+        '404':
+          description: Device(s) not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/devices/application/{application_id}':
+    get:
+      parameters:
+        - name: application_id
+          in: path
+          description: Unique id of the application
+          required: true
+          type: integer
+      tags:
+        - Devices
+      responses:
+        '200':
+          description: Devices with the given application.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Device'
+        '404':
+          description: Device(s) not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/devices/deviceconfig/{deviceconfig_id}':
+    get:
+      parameters:
+        - name: deviceconfig_id
+          in: path
+          description: Unique id of the deviceConfig
+          required: true
+          type: integer
+      tags:
+        - Devices
+      responses:
+        '200':
+          description: Devices with the given device config.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Device'
+        '404':
+          description: Device(s) not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/application':
+     post:
+      parameters:
+        - name: body
+          in: body
+          description: The body of type application
+          required: true
+          schema:
+            $ref: '#/definitions/Application'
+      tags:
+        - Applications
+      responses:
+        '201':
+          description: Application created
+          schema:
+            $ref: '#/definitions/Application'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  
+  '/application/{application_id}':
+    get:
+      parameters:
+        - name: application_id
+          in: path
+          description: Unique id of the application
+          required: true
+          type: integer
+      tags:
+        - Applications
+      responses:
+        '200':
+          description: Application found.
+          schema:
+            $ref: '#/definitions/Application'
+        '404':
+          description: Application not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  '/application/device/{device_id}':
+    get:
+      parameters:
+        - name: device_id
+          in: path
+          description: Unique id of the device
+          required: true
+          type: integer
+      tags:
+        - Applications
+      responses:
+        '200':
+          description: Application on a given device.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Application'
+        '404':
+          description: device not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  '/application/user/{user_id}':
+    get:
+      parameters:
+        - name: user_id
+          in: path
+          description: Unique id of the user
+          required: true
+          type: integer
+      tags:
+        - Applications
+      responses:
+        '200':
+          description: The applications by a given user.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Application'
+        '404':
+          description: Application(s) not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/action':
+     post:
+      parameters:
+        - name: body
+          in: body
+          description: The body of type action
+          required: true
+          schema:
+            $ref: '#/definitions/Action'
+      tags:
+        - Actions
+      responses:
+        '201':
+          description: Action created
+          schema:
+            $ref: '#/definitions/Action'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/action/{action_id}':
+    get:
+      parameters:
+        - name: action_id
+          in: path
+          description: Unique id of the action
+          required: true
+          type: integer
+      tags:
+        - Actions
+      responses:
+        '200':
+          description: Action found.
+          schema:
+            $ref: '#/definitions/Action'
+        '404':
+          description: Action not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  '/action/device/{device_id}':
+    get:
+      parameters:
+        - name: device_id
+          in: path
+          description: Unique id of the device
+          required: true
+          type: integer
+      tags:
+        - Actions
+      responses:
+        '200':
+          description: Actions executed on a given device.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Action'
+        '404':
+          description: Action(s) not found.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  '/package':
+     post:
+      parameters:
+        - name: body
+          in: body
+          description: The body of type package
+          required: true
+          schema:
+            $ref: '#/definitions/Package'
+      tags:
+        - Packages
+      responses:
+        '201':
+          description: Package created
+          schema:
+            $ref: '#/definitions/Package'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/package/{package_id}':
+    get:
+      parameters:
+        - name: package_id
+          in: path
+          description: Unique id of the package
+          required: true
+          type: integer
+      tags:
+        - Packages
+      responses:
+        '200':
+          description: Package found.
+          schema:
+            $ref: '#/definitions/Package'
+        '404':
+          description: Package not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  '/package/application/{application_id}':
+    get:
+      parameters:
+        - name: application_id
+          in: path
+          description: Unique id of the application
+          required: true
+          type: integer
+      tags:
+        - Packages
+      responses:
+        '200':
+          description: Packages having the given application.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Package'
+        '404':
+          description: Package(s) not found.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  
+  
+  
+definitions:
+  Info:
+    required:
+      - status
+    properties:
+      status:
+        type: string
+  Error:
+    type: object
+    required:
+      - message
+      - code
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+  User:
+    type: object
+    description: >-
+      Store User information.
+    properties:
+      userId:
+        description: Unique identifier for the user
+        type: integer
+      username:
+        description: Username
+        type: string
+      creationDate:
+        type: string
+        format: date-time
+      lastModifiedDate:
+        type: string
+        format: date-time
+      devices:
+        type: array
+        items:
+          $ref: '#/definitions/Device'
+      applications:
+        type: array
+        items:
+          $ref: '#/definitions/Application'
+        
+  DeviceConfiguration:
+    type: object
+    properties:
+      deviceConfigurationId:
+        type: integer
+      actionPollFrequency:
+        type: string
+      configPollFrequency:
+        type: string
+      edgeTimeZone:
+        type: string
+      heartbitSendFrenquency:
+        type: string
+      creationDate:
+        type: string
+        format: date-time
+      lastModifiedDate:
+        type: string
+        format: date-time
+        
+  Device:
+    type: object
+    properties:
+      Id:
+        type: integer
+      deviceId:
+        type: integer
+      createdBy:
+        type: integer
+      creationDate:
+        type: string
+        format: date-time
+      lastModifiedBy:
+        type: string
+      lastModifiedDate:
+        type: string
+        format: date-time
+      name:
+        type: string
+      token:
+        type: string
+      lastSeenDate:
+        type: string
+        format: date-time
+      isOnline:
+        type: boolean
+      deviceConfiguration:
+        type: array
+        items:
+          $ref: '#/definitions/DeviceConfiguration'
+      actions:
+        type: array
+        items:
+          $ref: '#/definitions/Action'
+      applications:
+        type: array
+        items:
+          $ref: '#/definitions/Application'
+      
+  Application:
+    type: object
+    properties:
+      applicationId:
+        type: integer
+      distribution_type:
+        type: string
+        enum:
+          - docker
+          - binary
+      name:
+        type: string
+      namespace:
+        type: string
+      owner:
+        type: integer
+      repo_name:
+        type: string
+      repo_url:
+        type: string
+      run_command:
+        type: string
+      star_count:
+        type: string
+  
+  Package:
+    type: object
+    properties:
+      packageId:
+        type: integer
+      name:
+        type: string
+      version:
+        type: string
+      applications:
+        type: array
+        items:
+          $ref: '#/definitions/Application'
+        
+  Action:
+    type: object
+    properties:
+      actionId:
+        type: integer
+      actionType:
+        type: string
+        enum:
+          - install
+          - update
+          - delete
+      applications:
+        type: array
+        items:
+          $ref: '#/definitions/Application'
+      executionStatus:
+        type: string
+        enum:
+          - ASSIGNED
+          - DOWNLOADING
+          - DOWNLOADED
+          - IN_PROGRESS
+          - REJECTED
+          - REQUEST_CANCEL
+          - FORCE_CANCEL
+          - CANCELLED
+          - FINISHED_WITH_SUCCESS
+          - FINISHED_WITH_ERROR
+          - REASSIGNED
+      deviceId:
+        type: integer
